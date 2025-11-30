@@ -5,18 +5,351 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>가격비교 - 최저가를 한눈에</title>
-    <meta name="description" content="한국 주요 쇼핑몰의 상품 가격과 혜택을 실시간으로 비교하세요. 최저가를 찾아드립니다.">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="ui-fix.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --primary-color: #667eea;
+            --primary-dark: #5568d3;
+            --secondary-color: #764ba2;
+            --accent-color: #f5576c;
+            --success-color: #00f2fe;
+            --bg-primary: #0f0f1e;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-card-hover: #1e2d4a;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b9c9;
+            --text-muted: #7c7d8c;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --font-primary: 'Inter', 'Noto Sans KR', sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 2rem;
+            --font-size-3xl: 3rem;
+            --transition-base: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        .header {
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+        }
+
+        .logo h1 {
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            gap: var(--spacing-lg);
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            transition: all var(--transition-base);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text-primary);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 30px 20px 50px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #b8b9c9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            display: none;
+        }
+
+        /* Search Box */
+        .search-box {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xs);
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            padding: 16px 20px;
+            font-size: 1.1rem;
+        }
+
+        .search-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .popular-keywords {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .keyword-tag {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: var(--primary-color);
+            padding: 10px 18px;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        /* Results */
+        .results-section {
+            padding: var(--spacing-xl) 0;
+        }
+
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: white;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .results-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-content {
+            padding: var(--spacing-md);
+        }
+
+        .mall-name {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+        }
+
+        .product-name {
+            font-size: var(--font-size-base);
+            margin: var(--spacing-sm) 0;
+            font-weight: 500;
+        }
+
+        .current-price {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+        }
+
+        .discount-rate {
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-left: var(--spacing-xs);
+        }
+
+        .final-price {
+            color: var(--success-color);
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+            margin-top: var(--spacing-xs);
+        }
+
+        .btn {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: var(--spacing-md);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 15, 30, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: var(--spacing-xl) 0;
+            margin-top: var(--spacing-xl);
+            text-align: center;
+            color: var(--text-muted);
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -33,27 +366,23 @@
                     <h1>가격비교</h1>
                 </div>
                 <nav class="nav">
-                    <a href="#" class="nav-link active" id="nav-home" onclick="handleHome(); return false;">홈</a>
-                    <a href="#" class="nav-link" id="nav-popular" onclick="handlePopular(); return false;">인기상품</a>
-                    <a href="#" class="nav-link" id="nav-category" onclick="handleCategory(); return false;">카테고리</a>
-                    <a href="#" class="nav-link" id="nav-favorites" onclick="alert('준비중입니다'); return false;">즐겨찾기</a>
+                    <a href="#" class="nav-link active" onclick="handleHome(); return false;">홈</a>
+                    <a href="#" class="nav-link" onclick="handlePopular(); return false;">인기상품</a>
+                    <a href="#" class="nav-link" onclick="handleCategory(); return false;">카테고리</a>
+                    <a href="#" class="nav-link" onclick="alert('준비중입니다'); return false;">즐겨찾기</a>
                 </nav>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
                 <h2 class="hero-title">최저가를 찾아드립니다</h2>
-                <p class="hero-subtitle">주요 쇼핑몰의 가격과 혜택을 실시간으로 비교하세요</p>
-
-                <!-- Search Box -->
                 <div class="search-box">
                     <div class="search-input-wrapper">
-                        <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg" style="min-width: 24px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            style="min-width: 24px; margin: 0 10px; color: var(--text-muted);">
                             <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
                             <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" />
@@ -64,7 +393,7 @@
                         <button id="searchBtn" class="search-btn" onclick="handleSearch()">검색</button>
                     </div>
                     <div class="popular-keywords">
-                        <span class="keyword-label">인기 검색어:</span>
+                        <span style="color: var(--text-muted); font-size: 0.9rem; align-self: center;">인기 검색어:</span>
                         <button class="keyword-tag" onclick="searchKeyword('갤럭시 S24')">갤럭시 S24</button>
                         <button class="keyword-tag" onclick="searchKeyword('에어팟 프로')">에어팟 프로</button>
                         <button class="keyword-tag" onclick="searchKeyword('국내산 냉장 삼겹살')">국내산 냉장 삼겹살</button>
@@ -76,107 +405,237 @@
         </div>
     </section>
 
-    <!-- Results Section -->
     <section class="results-section" id="resultsSection" style="display: none;">
         <div class="container">
-            <!-- Search Info -->
             <div class="search-info">
                 <h3 class="search-query" id="searchQuery"></h3>
                 <div class="search-meta">
-                    <span id="resultCount">0</span>개의 결과 ·
-                    <span id="lastUpdated"></span>
+                    <span id="resultCount">0</span>개의 결과 · <span id="lastUpdated"></span>
                 </div>
             </div>
-
-            <!-- Filter Bar -->
             <div class="filter-bar">
                 <div class="filter-group">
                     <button class="filter-btn active" data-filter="all"
-                        onclick="currentFilter='all'; applyFilter(); document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">전체</button>
+                        onclick="currentFilter='all'; applyFilter(); updateFilterUI(this);">전체</button>
                     <button class="filter-btn" data-filter="lowest"
-                        onclick="currentFilter='lowest'; applyFilter(); document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">최저가순</button>
+                        onclick="currentFilter='lowest'; applyFilter(); updateFilterUI(this);">최저가순</button>
                     <button class="filter-btn" data-filter="discount"
-                        onclick="currentFilter='discount'; applyFilter(); document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">할인율순</button>
+                        onclick="currentFilter='discount'; applyFilter(); updateFilterUI(this);">할인율순</button>
                     <button class="filter-btn" data-filter="benefit"
-                        onclick="currentFilter='benefit'; applyFilter(); document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">혜택순</button>
-                </div>
-                <div class="view-toggle">
-                    <button class="view-btn active" data-view="grid"
-                        onclick="currentView='grid'; toggleView(); document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" />
-                            <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" />
-                            <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" />
-                            <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" />
-                        </svg>
-                    </button>
-                    <button class="view-btn" data-view="list"
-                        onclick="currentView='list'; toggleView(); document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <line x1="8" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="8" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="8" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="3" y1="6" x2="3.01" y2="6" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="3" y1="12" x2="3.01" y2="12" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="3" y1="18" x2="3.01" y2="18" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                        </svg>
-                    </button>
+                        onclick="currentFilter='benefit'; applyFilter(); updateFilterUI(this);">혜택순</button>
                 </div>
             </div>
-
-            <!-- Price Comparison Cards -->
-            <div class="results-grid" id="resultsGrid">
-                <!-- Results will be dynamically inserted here -->
-            </div>
+            <div class="results-grid" id="resultsGrid"></div>
         </div>
     </section>
 
-    <!-- Loading Spinner -->
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="spinner"></div>
         <p class="loading-text">최저가를 찾는 중...</p>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>가격비교</h4>
-                    <p>스마트한 쇼핑의 시작</p>
-                </div>
-                <div class="footer-section">
-                    <h5>서비스</h5>
-                    <a href="#" onclick="handleHome(); return false;">가격비교</a>
-                    <a href="#" onclick="handlePopular(); return false;">인기상품</a>
-                    <a href="#" onclick="handleCategory(); return false;">카테고리</a>
-                </div>
-                <div class="footer-section">
-                    <h5>고객지원</h5>
-                    <a href="#">공지사항</a>
-                    <a href="#">FAQ</a>
-                    <a href="#">문의하기</a>
-                </div>
-                <div class="footer-section">
-                    <h5>정보</h5>
-                    <a href="#">이용약관</a>
-                    <a href="#">개인정보처리방침</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 가격비교. All rights reserved.</p>
-            </div>
+            <p>&copy; 2025 가격비교. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Mock Data
+        const mockProducts = {
+            '갤럭시 S24': [
+                { id: 1, name: '삼성 갤럭시 S24 자급제 256GB', mall: '삼성 공식몰', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop', originalPrice: 1200000, currentPrice: 950000, discount: 21, benefits: [{ type: 'coupon', text: '공식몰 전용 쿠폰 100,000원', value: 100000 }, { type: 'card', text: '삼성카드 10% 95,000원', value: 95000 }, { type: 'shipping', text: '무료배송', value: 0 }] },
+                { id: 2, name: '삼성 갤럭시 S24 자급제 256GB', mall: '네이버쇼핑', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop', originalPrice: 1200000, currentPrice: 999000, discount: 17, benefits: [{ type: 'coupon', text: '쿠폰 할인 50,000원', value: 50000 }, { type: 'shipping', text: '무료배송', value: 0 }] },
+                { id: 4, name: '삼성 갤럭시 S24 자급제 256GB', mall: '쿠팡', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop', originalPrice: 1200000, currentPrice: 1050000, discount: 13, benefits: [{ type: 'coupon', text: '쿠폰 할인 30,000원', value: 30000 }, { type: 'shipping', text: '로켓배송 무료', value: 0 }] }
+            ],
+            '에어팟 프로': [
+                { id: 12, name: '애플 에어팟 프로 2세대 USB-C', mall: 'Apple 공식몰', image: 'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=400&h=300&fit=crop', originalPrice: 359000, currentPrice: 359000, discount: 0, benefits: [{ type: 'shipping', text: '무료배송', value: 0 }] },
+                { id: 13, name: '애플 에어팟 프로 2세대 USB-C', mall: '네이버쇼핑', image: 'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=400&h=300&fit=crop', originalPrice: 359000, currentPrice: 299000, discount: 17, benefits: [{ type: 'coupon', text: '쿠폰 할인 10,000원', value: 10000 }, { type: 'shipping', text: '무료배송', value: 0 }] },
+                { id: 15, name: '애플 에어팟 프로 2세대 USB-C', mall: '쿠팡', image: 'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=400&h=300&fit=crop', originalPrice: 359000, currentPrice: 289000, discount: 19, benefits: [{ type: 'coupon', text: '첫 구매 쿠폰 5,000원', value: 5000 }, { type: 'shipping', text: '로켓배송 무료', value: 0 }] }
+            ],
+            '국내산 냉장 삼겹살': [
+                { id: 50, name: '국내산 냉장 삼겹살 구이용 500g', mall: '맛꾼푸드', image: 'https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=400&h=300&fit=crop', originalPrice: 15000, currentPrice: 13500, discount: 10, benefits: [{ type: 'coupon', text: '첫 구매 쿠폰 1,000원', value: 1000 }, { type: 'shipping', text: '무료배송 (3만원 이상)', value: 0 }] },
+                { id: 51, name: '국내산 냉장 삼겹살 구이용 500g', mall: '쿠팡', image: 'https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=400&h=300&fit=crop', originalPrice: 16000, currentPrice: 14500, discount: 9, benefits: [{ type: 'coupon', text: '쿠폰 할인 800원', value: 800 }, { type: 'shipping', text: '로켓배송 무료', value: 0 }] }
+            ],
+            '한우 1++ 등심': [
+                { id: 60, name: '한우 1++ 등심 200g', mall: '맛꾼푸드', image: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=400&h=300&fit=crop', originalPrice: 45000, currentPrice: 42000, discount: 7, benefits: [{ type: 'coupon', text: '프리미엄 쿠폰 3,000원', value: 3000 }, { type: 'shipping', text: '무료배송', value: 0 }] },
+                { id: 61, name: '한우 1++ 등심 200g', mall: '쿠팡', image: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=400&h=300&fit=crop', originalPrice: 48000, currentPrice: 45000, discount: 6, benefits: [{ type: 'coupon', text: '쿠폰 할인 2,500원', value: 2500 }, { type: 'shipping', text: '로켓배송 무료', value: 0 }] }
+            ],
+            '프리미엄 LA갈비': [
+                { id: 80, name: '프리미엄 LA갈비 1kg', mall: '맛꾼푸드', image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop', originalPrice: 35000, currentPrice: 32000, discount: 9, benefits: [{ type: 'coupon', text: '갈비 특가 쿠폰 2,500원', value: 2500 }, { type: 'shipping', text: '무료배송', value: 0 }] },
+                { id: 71, name: '프리미엄 LA갈비 1kg', mall: '쿠팡', image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop', originalPrice: 36000, currentPrice: 33500, discount: 7, benefits: [{ type: 'coupon', text: '쿠폰 할인 2,000원', value: 2000 }, { type: 'shipping', text: '로켓배송 무료', value: 0 }] }
+            ]
+        };
+
+        // State
+        let currentResults = [];
+        let currentFilter = 'all';
+
+        // DOM Elements
+        let searchInput, searchBtn, resultsSection, resultsGrid, loadingOverlay, searchQuery, resultCount, lastUpdated;
+
+        function initDOM() {
+            searchInput = document.getElementById('searchInput');
+            searchBtn = document.getElementById('searchBtn');
+            resultsSection = document.getElementById('resultsSection');
+            resultsGrid = document.getElementById('resultsGrid');
+            loadingOverlay = document.getElementById('loadingOverlay');
+            searchQuery = document.getElementById('searchQuery');
+            resultCount = document.getElementById('resultCount');
+            lastUpdated = document.getElementById('lastUpdated');
+        }
+
+        function handleSearch() {
+            initDOM();
+            const query = searchInput.value.trim();
+            if (!query) { alert('검색어를 입력해주세요.'); return; }
+
+            loadingOverlay.style.display = 'flex';
+            resultsSection.style.display = 'none';
+
+            setTimeout(() => {
+                let baseResults = [];
+                if (mockProducts[query]) baseResults = [...mockProducts[query]];
+                Object.keys(mockProducts).forEach(key => {
+                    if (key.toLowerCase().includes(query.toLowerCase()) && key !== query) {
+                        baseResults = [...baseResults, ...mockProducts[key]];
+                    }
+                });
+
+                if (baseResults.length === 0) {
+                    loadingOverlay.style.display = 'none';
+                    alert(`"${query}"에 대한 검색 결과가 없습니다.`);
+                    return;
+                }
+
+                currentResults = baseResults; // Simplified: no real-time update for stability
+                displayResults(query, currentResults);
+                loadingOverlay.style.display = 'none';
+                resultsSection.style.display = 'block';
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }, 1000);
+        }
+
+        function displayResults(query, results) {
+            searchQuery.textContent = `"${query}" 검색 결과`;
+            resultCount.textContent = results.length;
+            lastUpdated.textContent = `최근 업데이트: ${new Date().toLocaleString('ko-KR')}`;
+            renderProducts(results);
+        }
+
+        function renderProducts(products) {
+            resultsGrid.innerHTML = products.map(product => {
+                const totalBenefit = product.benefits.filter(b => b.type !== 'shipping').reduce((sum, b) => sum + b.value, 0);
+                const finalPrice = product.currentPrice - totalBenefit;
+                return `
+                    <div class="product-card" onclick="alert('${product.mall}로 이동합니다.')">
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                        <div class="product-content">
+                            <div class="mall-name">${product.mall}</div>
+                            <h4 class="product-name">${product.name}</h4>
+                            <div class="price-section">
+                                <div style="text-decoration: line-through; color: var(--text-muted); font-size: 0.875rem;">${product.originalPrice.toLocaleString()}원</div>
+                                <div>
+                                    <span class="current-price">${product.currentPrice.toLocaleString()}원</span>
+                                    <span class="discount-rate">${product.discount}%</span>
+                                </div>
+                                <div class="final-price">최종 혜택가 ${finalPrice.toLocaleString()}원</div>
+                            </div>
+                            <button class="btn btn-primary">구매하기</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function searchKeyword(keyword) {
+            initDOM();
+            searchInput.value = keyword;
+            handleSearch();
+        }
+
+        function handleHome() {
+            initDOM();
+            document.querySelector('.hero').style.display = 'block';
+            resultsSection.style.display = 'none';
+            searchInput.value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handlePopular() {
+            initDOM();
+            loadingOverlay.style.display = 'flex';
+            setTimeout(() => {
+                let popularItems = [];
+                Object.keys(mockProducts).forEach(key => {
+                    if (mockProducts[key].length > 0) popularItems.push(mockProducts[key][0]);
+                });
+                document.querySelector('.hero').style.display = 'none';
+                resultsSection.style.display = 'block';
+                searchQuery.textContent = "실시간 인기상품";
+                resultCount.textContent = popularItems.length;
+                lastUpdated.textContent = `기준: ${new Date().toLocaleString('ko-KR')}`;
+                renderProducts(popularItems);
+                loadingOverlay.style.display = 'none';
+            }, 800);
+        }
+
+        function handleCategory() {
+            initDOM();
+            document.querySelector('.hero').style.display = 'none';
+            resultsSection.style.display = 'block';
+            searchQuery.textContent = "카테고리";
+            resultCount.textContent = "전체";
+            lastUpdated.textContent = "";
+
+            const categories = [
+                { name: '전자제품', icon: '📱', keywords: ['갤럭시 S24', '에어팟 프로'] },
+                { name: '식품', icon: '🥩', keywords: ['국내산 냉장 삼겹살', '한우 1++ 등심', '프리미엄 LA갈비'] }
+            ];
+
+            resultsGrid.innerHTML = categories.map(cat => `
+                <div class="category-card" onclick="searchCategory('${cat.name}')" style="background: var(--bg-card); padding: 30px; border-radius: 16px; text-align: center; cursor: pointer; border: 1px solid var(--border-color);">
+                    <div style="font-size: 40px; margin-bottom: 15px;">${cat.icon}</div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">${cat.name}</h3>
+                    <p style="color: var(--text-secondary);">${cat.keywords.length}개 상품</p>
+                </div>
+            `).join('');
+        }
+
+        function searchCategory(categoryName) {
+            const categories = [
+                { name: '전자제품', keywords: ['갤럭시 S24', '에어팟 프로'] },
+                { name: '식품', keywords: ['국내산 냉장 삼겹살', '한우 1++ 등심', '프리미엄 LA갈비'] }
+            ];
+            const category = categories.find(c => c.name === categoryName);
+            if (category) {
+                loadingOverlay.style.display = 'flex';
+                setTimeout(() => {
+                    let items = [];
+                    category.keywords.forEach(k => { if (mockProducts[k]) items = [...items, ...mockProducts[k]]; });
+                    searchQuery.textContent = `${categoryName} 인기상품`;
+                    resultCount.textContent = items.length;
+                    renderProducts(items);
+                    loadingOverlay.style.display = 'none';
+                }, 800);
+            }
+        }
+
+        function applyFilter() {
+            // Simple filter implementation placeholder
+            // In a real scenario, this would sort currentResults
+            // For now, just re-rendering to show responsiveness
+            if (currentResults.length > 0) renderProducts(currentResults);
+        }
+
+        function updateFilterUI(btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDOM);
+    </script>
 </body>
 
 </html>
-<!-- Trigger Re-deploy -->
