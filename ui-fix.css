@@ -1,0 +1,27 @@
+/* UI 효율성 개선 */
+.hero {
+    padding: 30px 20px 50px !important;
+}
+
+.hero-title {
+    font-size: 2rem !important;
+    margin-bottom: 25px !important;
+}
+
+.hero-subtitle {
+    display: none;
+}
+
+.search-input {
+    padding: 16px 20px !important;
+    font-size: 1.1rem !important;
+}
+
+.search-btn {
+    padding: 16px 32px !important;
+}
+
+.keyword-tag {
+    padding: 10px 18px !important;
+    font-size: 0.95rem !important;
+}
